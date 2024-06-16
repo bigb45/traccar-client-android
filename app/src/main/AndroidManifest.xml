@@ -67,6 +67,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".TrackingSection"
+            android:exported="false"
+           />
+
         <service
             android:name=".TrackingService"
             android:exported="false"

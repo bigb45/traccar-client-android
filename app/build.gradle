@@ -63,6 +63,9 @@ dependencies {
     implementation('dev.doubledot.doki:library:0.0.1@aar') {
         transitive = true
     }
+    def nav_version = "2.4.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     testImplementation 'androidx.test:core:1.5.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.7.3'
@@ -72,6 +75,7 @@ dependencies {
     googleImplementation 'com.google.firebase:firebase-crashlytics'
     googleImplementation 'com.google.android.gms:play-services-location:21.2.0'
     googleImplementation 'com.google.android.play:core:1.10.3'
+
 }
 
 tasks.register('copyFirebaseConfig', Copy) {

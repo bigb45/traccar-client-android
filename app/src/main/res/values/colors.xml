@@ -4,5 +4,8 @@
     <color name="primary">#2e7d32</color>
     <color name="primary_dark">#005005</color>
     <color name="accent">#1a237e</color>
+    <color name="stopped">#fe1c1e</color>
+    <color name="started">#209175</color>
+
 
 </resources>

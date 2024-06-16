@@ -46,4 +46,6 @@
   <string name="hidden_app_name">Paramètres de l\'appareil</string>
   <string name="hidden_alert">Cette application a été cachée. Pour l\'ouvrir à nouveau, composez le 8722227 (TRACCAR)</string>
   <string name="error_msg_invalid_url">S\'il vous plait, entrer un URL http:// ou https:// valide</string>
+
+  <string name="new_section">New Tracking Section</string>
 </resources>

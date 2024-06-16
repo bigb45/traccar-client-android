@@ -61,20 +61,23 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         setPreferencesFromResource(R.xml.preferences, rootKey)
         initPreferences()
 
-        findPreference<Preference>(KEY_DEVICE)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            newValue != null && newValue != ""
-        }
-        findPreference<Preference>(KEY_URL)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            newValue != null && validateServerURL(newValue.toString())
-        }
-        findPreference<Preference>(KEY_INTERVAL)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            try {
-                newValue != null && (newValue as String).toInt() > 0
-            } catch (e: NumberFormatException) {
-                Log.w(TAG, e)
-                false
+        findPreference<Preference>(KEY_DEVICE)?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                newValue != null && newValue != ""
             }
-        }
+        findPreference<Preference>(KEY_URL)?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                newValue != null && validateServerURL(newValue.toString())
+            }
+        findPreference<Preference>(KEY_INTERVAL)?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                try {
+                    newValue != null && (newValue as String).toInt() > 0
+                } catch (e: NumberFormatException) {
+                    Log.w(TAG, e)
+                    false
+                }
+            }
         val numberValidationListener = Preference.OnPreferenceChangeListener { _, newValue ->
             try {
                 newValue != null && (newValue as String).toInt() >= 0
@@ -83,7 +86,8 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
                 false
             }
         }
-        findPreference<Preference>(KEY_DISTANCE)?.onPreferenceChangeListener = numberValidationListener
+        findPreference<Preference>(KEY_DISTANCE)?.onPreferenceChangeListener =
+            numberValidationListener
         findPreference<Preference>(KEY_ANGLE)?.onPreferenceChangeListener = numberValidationListener
 
         alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -170,8 +174,10 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
             }
             (requireActivity().application as MainApplication).handleRatingFlow(requireActivity())
         } else if (key == KEY_DEVICE) {
-            findPreference<Preference>(KEY_DEVICE)?.summary = sharedPreferences?.getString(KEY_DEVICE, null)
+            findPreference<Preference>(KEY_DEVICE)?.summary =
+                sharedPreferences?.getString(KEY_DEVICE, null)
         }
+        Log.d("tag", "updated shared prefs: ${sharedPreferences?.getBoolean(KEY_STATUS, false)}")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -197,7 +203,8 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
             findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
         }
-        findPreference<Preference>(KEY_DEVICE)?.summary = sharedPreferences.getString(KEY_DEVICE, null)
+        findPreference<Preference>(KEY_DEVICE)?.summary =
+            sharedPreferences.getString(KEY_DEVICE, null)
     }
 
     private fun showBackgroundLocationDialog(context: Context, onSuccess: () -> Unit) {
@@ -217,35 +224,53 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         var permission = initialPermission
         if (checkPermission) {
             val requiredPermissions: MutableSet<String> = HashSet()
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
             }
             permission = requiredPermissions.isEmpty()
             if (!permission) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(requiredPermissions.toTypedArray(), PERMISSIONS_REQUEST_LOCATION)
+                    requestPermissions(
+                        requiredPermissions.toTypedArray(),
+                        PERMISSIONS_REQUEST_LOCATION
+                    )
                 }
                 return
             }
         }
         if (permission) {
-            setPreferencesEnabled(false)
-            ContextCompat.startForegroundService(requireContext(), Intent(activity, TrackingService::class.java))
+            ContextCompat.startForegroundService(
+                requireContext(),
+                Intent(activity, TrackingService::class.java)
+            )
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                 alarmManager.setInexactRepeating(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    ALARM_MANAGER_INTERVAL.toLong(), ALARM_MANAGER_INTERVAL.toLong(), alarmIntent
+                    ALARM_MANAGER_INTERVAL.toLong(),
+                    ALARM_MANAGER_INTERVAL.toLong(),
+                    alarmIntent
                 )
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-                && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestingPermissions = true
                 showBackgroundLocationDialog(requireContext()) {
-                    requestPermissions(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), PERMISSIONS_REQUEST_BACKGROUND_LOCATION)
+                    requestPermissions(
+                        arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                        PERMISSIONS_REQUEST_BACKGROUND_LOCATION
+                    )
                 }
             } else {
-                requestingPermissions = BatteryOptimizationHelper().requestException(requireContext())
+                requestingPermissions =
+                    BatteryOptimizationHelper().requestException(requireContext())
             }
         } else {
             sharedPreferences.edit().putBoolean(KEY_STATUS, false).apply()
@@ -259,10 +284,13 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
             alarmManager.cancel(alarmIntent)
         }
         requireActivity().stopService(Intent(activity, TrackingService::class.java))
-        setPreferencesEnabled(true)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
         if (requestCode == PERMISSIONS_REQUEST_LOCATION) {
             var granted = true
             for (result in grantResults) {
@@ -277,10 +305,9 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
 
     private fun validateServerURL(userUrl: String): Boolean {
         val port = Uri.parse(userUrl).port
-        if (
-            URLUtil.isValidUrl(userUrl) &&
-            (port == -1 || port in 1..65535) &&
-            (URLUtil.isHttpUrl(userUrl) || URLUtil.isHttpsUrl(userUrl))
+        if (URLUtil.isValidUrl(userUrl) && (port == -1 || port in 1..65535) && (URLUtil.isHttpUrl(
+                userUrl
+            ) || URLUtil.isHttpsUrl(userUrl))
         ) {
             return true
         }

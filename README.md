@@ -1,12 +1,12 @@
 # [Traccar Client for Android](https://www.traccar.org/client)
 
-[![Get it on Google Play](http://www.tananaev.com/badges/google-play.svg)](https://play.google.com/store/apps/details?id=org.traccar.client) [![Get it on F-Droid](http://www.tananaev.com/badges/f-droid.svg)](https://f-droid.org/repository/browse/?fdid=org.traccar.client)
+[![Get it on Google Play]/google-play.svg)](https://play.google.com/store/apps/details?id=org.traccar.client) [![Get it on F-Droid](http://www.tananaev.com/badges/f-droid.svg)](https://f-droid.org/repository/browse/?fdid=org.traccar.client)
 
 ## Overview
 
 Traccar Client is an Android GPS tracking application. It can work with Traccar open source server software.
 
-## Team
+## Team(http://www.tananaev.com/badges
 
 - Anton Tananaev ([anton@traccar.org](mailto:anton@traccar.org))
 
@@ -20,7 +20,7 @@ Traccar Client is an Android GPS tracking application. It can work with Traccar 
 
         http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
+    Urnless required by applicable law o agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and

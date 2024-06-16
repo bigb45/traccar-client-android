@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/trackingSection">
+
+    <fragment
+        android:id="@+id/trackingSection"
+        android:name="org.traccar.client.TrackingSection"
+        android:label="TrackingSection"
+        tools:layout="@layout/tracking_section">
+        <action
+            android:id="@+id/action_trackingSection_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="org.traccar.client.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/list" />
+</navigation>

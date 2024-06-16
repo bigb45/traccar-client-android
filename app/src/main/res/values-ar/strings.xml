@@ -46,4 +46,5 @@
   <string name="hidden_app_name">إعدادات الجهاز</string>
   <string name="hidden_alert">تم إخفاء التطبيق. لفتحه مجددا رجاءا اتصل بـ8722227 (TRACCAR).</string>
   <string name="error_msg_invalid_url">الرجاء إدخال رابط صحيح http:// أو https://</string>
+    <string name="new_section">قسم التعقب الجديد</string>
 </resources>

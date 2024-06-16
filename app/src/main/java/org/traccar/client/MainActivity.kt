@@ -15,14 +15,56 @@
  */
 package org.traccar.client
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.webkit.URLUtil
+import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        setContentView(R.layout.tracking_section)
         setContentView(R.layout.main)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment, TrackingSection())
+                .commit()
+        }
+
     }
 
+
+    companion object {
+        private val TAG = "Traccar"
+        private const val ALARM_MANAGER_INTERVAL = 15000
+        const val KEY_DEVICE = "id"
+        const val KEY_URL = "url"
+        const val KEY_INTERVAL = "interval"
+        const val KEY_DISTANCE = "distance"
+        const val KEY_ANGLE = "angle"
+        const val KEY_ACCURACY = "accuracy"
+        const val KEY_STATUS = "status"
+        const val KEY_BUFFER = "buffer"
+        const val KEY_WAKELOCK = "wakelock"
+        const val TRACKING_SECTION = "open_section"
+        private const val PERMISSIONS_REQUEST_LOCATION = 2
+        private const val PERMISSIONS_REQUEST_BACKGROUND_LOCATION = 3
+    }
 }

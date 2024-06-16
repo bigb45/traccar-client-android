@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.webkit.URLUtil
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
@@ -28,8 +26,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.button.MaterialButton
 import kotlin.random.Random
@@ -59,7 +55,7 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
         initPreferences()
         setupAlarmManager()
         setupToggleButton(view)
-        setupTrackingState(view)
+        setupTrackingState()
         setupCopyButton(view)
         setupAnimation(view)
         toggleAnimation()
@@ -100,12 +96,12 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setupTrackingState(view: View) {
+    private fun setupTrackingState() {
 
         if (sharedPreferences.getBoolean(KEY_STATUS, false)) {
             toggleButton.apply {
 
-                text = "Stop Tracking"
+                text = getString(R.string.stop_tracking)
                 backgroundTintList = null
                 background = ContextCompat.getDrawable(requireContext(), R.drawable.tracking_stopped_button)
                 icon = ContextCompat.getDrawable(requireContext(), R.drawable.baseline_not_started_24)
@@ -113,7 +109,7 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
             startTrackingService(checkPermission = true, initialPermission = false)
         } else {
             toggleButton.apply {
-                text = "Start Tracking"
+                text = getString(R.string.start_tracking)
                 backgroundTintList = null
                 background = ContextCompat.getDrawable(requireContext(), R.drawable.tracking_started_button)
                 icon = ContextCompat.getDrawable(requireContext(), R.drawable.baseline_pause_circle_24)
@@ -145,7 +141,7 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
         val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("label", text)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(requireContext(), "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.text_copied), Toast.LENGTH_SHORT).show()
     }
     private fun initPreferences() {
         if (!sharedPreferences.contains(KEY_DEVICE)) {
@@ -173,13 +169,13 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
     }
     private fun updateToggleButton(isTracking: Boolean) {
         if (isTracking) {
-            toggleButton.text = "Stop Tracking"
+            toggleButton.text = getString(R.string.stop_tracking)
             toggleButton.setBackgroundResource(R.drawable.tracking_stopped_button)
             toggleButton.icon = ContextCompat.getDrawable(requireContext(), R.drawable.baseline_not_started_24)
 
 
         } else {
-            toggleButton.text = "Start Tracking"
+            toggleButton.text = getString(R.string.start_tracking)
             toggleButton.setBackgroundResource(R.drawable.tracking_started_button)
             toggleButton.icon = ContextCompat.getDrawable(requireContext(), R.drawable.baseline_pause_circle_24)
 
@@ -320,32 +316,13 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
         builder.show()
     }
 
-    private fun validateServerURL(userUrl: String): Boolean {
-        val port = Uri.parse(userUrl).port
-        if (
-            URLUtil.isValidUrl(userUrl) &&
-            (port == -1 || port in 1..65535) &&
-            (URLUtil.isHttpUrl(userUrl) || URLUtil.isHttpsUrl(userUrl))
-        ) {
-            return true
-        }
-        Toast.makeText(requireContext(), R.string.error_msg_invalid_url, Toast.LENGTH_LONG).show()
-        return false
-    }
+
 
     companion object {
         private val TAG = TrackingSection::class.java.simpleName
         private const val ALARM_MANAGER_INTERVAL = 15000
         const val KEY_DEVICE = "id"
-        const val KEY_URL = "url"
-        const val KEY_INTERVAL = "interval"
-        const val KEY_DISTANCE = "distance"
-        const val KEY_ANGLE = "angle"
-        const val KEY_ACCURACY = "accuracy"
         const val KEY_STATUS = "status"
-        const val KEY_BUFFER = "buffer"
-        const val KEY_WAKELOCK = "wakelock"
-        const val TRACKING_SECTION = "open_section"
         private const val PERMISSIONS_REQUEST_LOCATION = 2
         private const val PERMISSIONS_REQUEST_BACKGROUND_LOCATION = 3
     }

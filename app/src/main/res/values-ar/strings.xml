@@ -47,4 +47,10 @@
   <string name="hidden_alert">تم إخفاء التطبيق. لفتحه مجددا رجاءا اتصل بـ8722227 (TRACCAR).</string>
   <string name="error_msg_invalid_url">الرجاء إدخال رابط صحيح http:// أو https://</string>
     <string name="new_section">قسم التعقب الجديد</string>
+    <string name="start_tracking">بدء التتبع</string>
+  <string name="settings">الإعدادات</string>
+  <string name="tracking_id">رقم التتبع</string>
+  <string name="stop_tracking">إيقاف التتبع</string>
+  <string name="text_copied">تم نسخ رقم التتبع</string>
+
 </resources>

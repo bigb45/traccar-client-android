@@ -122,7 +122,7 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
         animatedCircle = view.findViewById(R.id.animatedCircle1)
 
         val screenHeight = resources.displayMetrics.heightPixels
-        val margin = (screenHeight * 0.05).toInt()
+        val margin = (screenHeight * 0.08).toInt()
         val params = animatedCircle.layoutParams as FrameLayout.LayoutParams
         params.topMargin = margin
         animatedCircle.layoutParams = params

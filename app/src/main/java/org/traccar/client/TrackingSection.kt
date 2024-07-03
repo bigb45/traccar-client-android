@@ -207,6 +207,8 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
     }
 
     private fun startTrackingService(checkPermission: Boolean, initialPermission: Boolean) {
+        if (!isAdded) return
+
         var permission = initialPermission
         if (checkPermission) {
             val requiredPermissions: MutableSet<String> = HashSet()

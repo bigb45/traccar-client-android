@@ -207,6 +207,8 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
     }
 
     private fun startTrackingService(checkPermission: Boolean, initialPermission: Boolean) {
+        if (!isAdded) return
+
         var permission = initialPermission
         if (checkPermission) {
             val requiredPermissions: MutableSet<String> = HashSet()
@@ -272,6 +274,7 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             alarmManager.cancel(alarmIntent)
         }
+        if (!isAdded) return
         requireActivity().stopService(Intent(requireContext(), TrackingService::class.java))
 //        sharedPreferences.edit().putBoolean(KEY_STATUS, false).apply()
 

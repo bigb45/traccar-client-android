@@ -53,7 +53,9 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
     private lateinit var alarmManager: AlarmManager
     private lateinit var alarmIntent: PendingIntent
     private var requestingPermissions: Boolean = false
-
+    private val fixedAngle = "20"
+    private val fixedDistance = "200"
+    private val fixedFrequency = "600"
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setHasOptionsMenu(true)
@@ -202,6 +204,23 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
             val id = (Random().nextInt(900000) + 100000).toString()
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
             findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
+        }
+//      set angle
+        if (!sharedPreferences.contains(KEY_ANGLE)) {
+            sharedPreferences.edit().putString(KEY_ANGLE, fixedAngle).apply()
+            findPreference<EditTextPreference>(KEY_ANGLE)?.text = fixedAngle
+        }
+
+//        set distance
+        if (!sharedPreferences.contains(KEY_DISTANCE)) {
+            sharedPreferences.edit().putString(KEY_DISTANCE, fixedDistance).apply()
+            findPreference<EditTextPreference>(KEY_DISTANCE)?.text = fixedDistance
+        }
+
+//        set distance
+        if (!sharedPreferences.contains(KEY_INTERVAL)) {
+            sharedPreferences.edit().putString(KEY_INTERVAL, fixedFrequency).apply()
+            findPreference<EditTextPreference>(KEY_INTERVAL)?.text = fixedFrequency
         }
         findPreference<Preference>(KEY_DEVICE)?.summary =
             sharedPreferences.getString(KEY_DEVICE, null)

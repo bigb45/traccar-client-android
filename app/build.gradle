@@ -19,6 +19,7 @@ android {
 
     packagingOptions {
         resources {
+            exclude 'META-INF/androidx.cardview_cardview.version'
             excludes += ['META-INF/DEPENDENCIES']
         }
     }
@@ -74,7 +75,6 @@ dependencies {
     googleImplementation 'com.google.firebase:firebase-analytics'
     googleImplementation 'com.google.firebase:firebase-crashlytics'
     googleImplementation 'com.google.android.gms:play-services-location:21.2.0'
-    googleImplementation 'com.google.android.play:core:1.10.3'
 
 }
 

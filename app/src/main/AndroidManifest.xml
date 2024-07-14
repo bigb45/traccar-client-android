@@ -35,6 +35,7 @@
             android:value="false" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask" />
@@ -53,6 +54,7 @@
         </activity-alias>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".StatusActivity"
             android:exported="false" />
 
@@ -69,6 +71,7 @@
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".TrackingSection"
             android:exported="false"
            />

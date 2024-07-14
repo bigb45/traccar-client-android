@@ -9,6 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:name="org.traccar.client.TrackingSection" />
+        android:name="com.bazytrack.weenak.TrackingSection" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

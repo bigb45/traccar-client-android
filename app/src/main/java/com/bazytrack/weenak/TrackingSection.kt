@@ -2,6 +2,7 @@ package com.bazytrack.weenak
 
 import android.Manifest
 import android.app.AlarmManager
+import android.app.Fragment
 import android.app.PendingIntent
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -26,13 +27,13 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+
 import androidx.preference.PreferenceManager
 import com.google.android.material.button.MaterialButton
 import kotlin.random.Random
 
 
-class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
+class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChangeListener {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var alarmManager: AlarmManager
@@ -123,7 +124,7 @@ class TrackingSection : Fragment(), OnSharedPreferenceChangeListener {
         animatedCircle = view.findViewById(R.id.animatedCircle1)
 
         val screenHeight = resources.displayMetrics.heightPixels
-        val margin = (screenHeight * 0.09).toInt()
+        val margin = (screenHeight * 0.09 ).toInt()
         val height = (screenHeight * 0.3).toInt()
 
         val params = animatedCircle.layoutParams as ConstraintLayout.LayoutParams

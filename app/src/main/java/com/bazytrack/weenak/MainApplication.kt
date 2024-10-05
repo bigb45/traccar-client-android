@@ -37,10 +37,10 @@ open class MainApplication : MultiDexApplication() {
     @TargetApi(Build.VERSION_CODES.O)
     private fun registerChannel() {
         val channel = NotificationChannel(
-            PRIMARY_CHANNEL, getString(R.string.channel_default), NotificationManager.IMPORTANCE_LOW
+            PRIMARY_CHANNEL, getString(R.string.channel_default), NotificationManager.IMPORTANCE_HIGH
         )
         channel.lightColor = Color.GREEN
-        channel.lockscreenVisibility = Notification.VISIBILITY_SECRET
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
     }
 

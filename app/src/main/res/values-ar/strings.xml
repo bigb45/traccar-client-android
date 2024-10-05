@@ -46,11 +46,15 @@
   <string name="hidden_app_name">إعدادات الجهاز</string>
   <string name="hidden_alert">تم إخفاء التطبيق. لفتحه مجددا رجاءا اتصل بـ8722227 (TRACCAR).</string>
   <string name="error_msg_invalid_url">الرجاء إدخال رابط صحيح http:// أو https://</string>
-    <string name="new_section">قسم التعقب الجديد</string>
+    <string name="request_exception">يحتاج هذا التطبيق إلى العمل في الخلفية لتتبع المركبة بدقة. لضمان تتبع غير منقطع، يرجى تعطيل تحسين البطارية لهذا التطبيق في الشاشة التالية.</string>
+    <string name="request_background">يحتاج هذه التطبيق إلى الوصول إلى موقعك في جميع الأوقات لتتبع المركبة، حتى عندما لا تستخدم التطبيق. يرجى اختيار \'السماح طوال الوقت\' في الشاشة التالية لضمان تتبع دقيق للمركبة. نحن لا نستخدم موقعك لأي أغراض أخرى.</string>
+  <string name="new_section">قسم التعقب الجديد</string>
     <string name="start_tracking">بدء التتبع</string>
   <string name="settings">الإعدادات</string>
   <string name="tracking_id">رقم التتبع</string>
   <string name="stop_tracking">إيقاف التتبع</string>
   <string name="text_copied">تم نسخ رقم التتبع</string>
+  <string name="request_background_improved">يحتاج هذه التطبيق إلى الوصول إلى موقعك في جميع الأوقات لتتبع المركبة، حتى عندما لا تستخدم التطبيق. يرجى اختيار \'السماح طوال الوقت\' في الشاشة التالية لضمان تتبع دقيق للمركبة. نحن لا نستخدم موقعك لأي أغراض أخرى.</string>
+  <string name="request_background_title">الوصول إلى الموقع في الخلفية مطلوب</string>
 
 </resources>

@@ -233,7 +233,8 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         } else {
             context.getString(R.string.request_background_option)
         }
-        builder.setMessage(context.getString(R.string.request_background, option))
+        builder.setTitle(context.getString(R.string.request_background_title))
+        builder.setMessage(context.getString(R.string.request_background_improved))
         builder.setPositiveButton(android.R.string.ok) { _, _ -> onSuccess() }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.show()

@@ -43,12 +43,14 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
     private lateinit var settingsButton: MaterialButton
     private lateinit var animatedCircle: View
     private lateinit var circleAnimation: Animation
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.tracking_section, container, false)
     }
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,11 +88,11 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         settingsButton = view.findViewById(R.id.settings_button)
         toggleButton = view.findViewById(R.id.button_toggle_service)
 
-        settingsButton.setOnClickListener{
+        settingsButton.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment, MainFragment())
-                .addToBackStack(null) // This allows the back button to reverse the transaction
-                .commit()
+                    .replace(R.id.fragment, MainFragment())
+                    .addToBackStack(null)
+                    .commit()
         }
         toggleButton.setOnClickListener {
             toggleTracking(sharedPreferences.getBoolean(KEY_STATUS, false))
@@ -120,11 +122,11 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         }
     }
 
-    private fun setupAnimation(view: View){
+    private fun setupAnimation(view: View) {
         animatedCircle = view.findViewById(R.id.animatedCircle1)
 
         val screenHeight = resources.displayMetrics.heightPixels
-        val margin = (screenHeight * 0.09 ).toInt()
+        val margin = (screenHeight * 0.09).toInt()
         val height = (screenHeight * 0.3).toInt()
 
         val params = animatedCircle.layoutParams as ConstraintLayout.LayoutParams
@@ -135,6 +137,7 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
 
         circleAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_anim_1)
     }
+
     private fun setupCopyButton(view: View) {
         view.findViewById<ImageButton>(R.id.button_copy_id).setOnClickListener {
             sharedPreferences.getString(KEY_DEVICE, "0000")?.let { text -> copyTextToClipboard(text) }
@@ -149,11 +152,12 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         clipboard.setPrimaryClip(clip)
         Toast.makeText(requireContext(), getString(R.string.text_copied), Toast.LENGTH_SHORT).show()
     }
+
     private fun initPreferences() {
         if (!sharedPreferences.contains(KEY_DEVICE)) {
             val chars = ('A'..'Z')
             val randomChars = (1..3)
-                .map { chars.random() }.joinToString("")
+                    .map { chars.random() }.joinToString("")
             val id = "$randomChars${(Random.nextInt(900000) + 100000)}"
 
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
@@ -161,18 +165,20 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         }
     }
 
-    private fun toggleTracking(isTracking: Boolean){
-        if(isTracking){
+    private fun toggleTracking(isTracking: Boolean) {
+        if(!isAdded) return
+        if (isTracking) {
             PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putBoolean(MainActivity.KEY_STATUS, false).apply()
             Toast.makeText(requireContext(), R.string.status_service_destroy, Toast.LENGTH_SHORT).show()
 
-        }else{
+        } else {
             PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putBoolean(MainActivity.KEY_STATUS, true).apply()
             Toast.makeText(requireContext(), R.string.status_service_create, Toast.LENGTH_SHORT).show()
         }
         toggleAnimation()
         updateToggleButton(!isTracking)
     }
+
     private fun updateToggleButton(isTracking: Boolean) {
         if (isTracking) {
             toggleButton.text = getString(R.string.stop_tracking)
@@ -187,13 +193,15 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
 
         }
     }
-    private fun toggleAnimation(){
-        if(sharedPreferences.getBoolean(KEY_STATUS, false)){
+
+    private fun toggleAnimation() {
+        if (sharedPreferences.getBoolean(KEY_STATUS, false)) {
             animatedCircle.startAnimation(circleAnimation)
-        }else{
+        } else {
             animatedCircle.clearAnimation()
         }
     }
+
     override fun onStart() {
         super.onStart()
         if (requestingPermissions) {
@@ -209,71 +217,105 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
                 stopTrackingService()
             }
         }
-        Log.d(TAG, "updated shared prefs: ${sharedPreferences?.getBoolean(KEY_STATUS, false)}")
     }
 
     private fun startTrackingService(checkPermission: Boolean, initialPermission: Boolean) {
         if (!isAdded) return
 
+        val userConsentGranted = sharedPreferences.getBoolean(KEY_USER_CONSENTED, false)
+        if (!userConsentGranted) {
+            requestingPermissions = true
+            showBackgroundLocationDialog(optionalMessage = getString(R.string.request_foreground), context = requireContext()) {
+
+                sharedPreferences.edit().putBoolean(KEY_USER_CONSENTED, true).apply()
+                showSystemLocationDialog(checkPermission, initialPermission)
+            }
+        } else {
+            showSystemLocationDialog(checkPermission, initialPermission)
+        }
+    }
+
+    private fun showSystemLocationDialog(checkPermission: Boolean, initialPermission: Boolean) {
+
+        // Check if the fragment is still attached to the activity before proceeding
+        if (!isAdded) return
+
         var permission = initialPermission
+
         if (checkPermission) {
+            Log.d(TAG, "checking permission")
             val requiredPermissions: MutableSet<String> = HashSet()
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            // Safely check for permission using context
+            activity?.let { safeActivity ->
+                if (ContextCompat.checkSelfPermission(
+                                safeActivity,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
             }
             permission = requiredPermissions.isEmpty()
             if (!permission) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(
-                        requiredPermissions.toTypedArray(),
-                        PERMISSIONS_REQUEST_LOCATION
-                    )
+                    activity?.let { safeActivity ->
+                        requestPermissions(
+                                requiredPermissions.toTypedArray(),
+                                PERMISSIONS_REQUEST_LOCATION
+                        )
+                    }
                 }
                 return
             }
         }
+
         if (permission) {
-            ContextCompat.startForegroundService(
-                requireContext(),
-                Intent(requireContext(), TrackingService::class.java)
-            )
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                alarmManager.setInexactRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    ALARM_MANAGER_INTERVAL.toLong(), ALARM_MANAGER_INTERVAL.toLong(), alarmIntent
+            Log.d(TAG, "initial permission granted, checking for background location")
+
+            // Check if fragment is still attached before starting the service
+            activity?.let { safeActivity ->
+                ContextCompat.startForegroundService(
+                        safeActivity,
+                        Intent(safeActivity, TrackingService::class.java)
                 )
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-                && ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestingPermissions = true
-                showBackgroundLocationDialog(requireContext()) {
-                    requestPermissions(
-                        arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-                        PERMISSIONS_REQUEST_BACKGROUND_LOCATION
-                    )
-                }
-            } else {
-                requestingPermissions =
-                    BatteryOptimizationHelper().requestException(requireContext())
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                alarmManager.setInexactRepeating(
+                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        ALARM_MANAGER_INTERVAL.toLong(),
+                        ALARM_MANAGER_INTERVAL.toLong(),
+                        alarmIntent
+                )
             }
 
-//            sharedPreferences.edit().putBoolean(KEY_STATUS, true).apply()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+                    ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestingPermissions = true
 
+                // Safely check if fragment is attached and then show the dialog
+                activity?.let { safeActivity ->
+                    showBackgroundLocationDialog(context = safeActivity) {
+                        requestPermissions(
+                                arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                                PERMISSIONS_REQUEST_BACKGROUND_LOCATION
+                        )
+                    }
+                }
+            } else {
+                requestingPermissions = BatteryOptimizationHelper().requestException(requireContext())
+            }
 
         } else {
+            Log.d(TAG, "initial permission not granted by user.")
             sharedPreferences.edit().putBoolean(KEY_STATUS, false).apply()
-
         }
     }
+
 
     private fun stopTrackingService() {
         Log.d(TAG, "service has stopped")
@@ -285,6 +327,7 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
 //        sharedPreferences.edit().putBoolean(KEY_STATUS, false).apply()
 
     }
+
     override fun onResume() {
         super.onResume()
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
@@ -294,10 +337,11 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         super.onPause()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
+
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray,
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_LOCATION) {
@@ -312,19 +356,21 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         }
     }
 
-    private fun showBackgroundLocationDialog(context: Context, onSuccess: () -> Unit) {
+    private fun showBackgroundLocationDialog(optionalMessage: String? = null, context: Context, onSuccess: () -> Unit) {
         val builder = AlertDialog.Builder(context)
         val option = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             context.packageManager.backgroundPermissionOptionLabel
         } else {
             context.getString(R.string.request_background_option)
         }
-        builder.setMessage(context.getString(R.string.request_background, option))
-        builder.setPositiveButton(android.R.string.ok) { _, _ -> onSuccess() }
-        builder.setNegativeButton(android.R.string.cancel, null)
+        builder.setMessage(optionalMessage
+                ?: context.getString(R.string.request_background, option))
+        builder.setPositiveButton(R.string.i_understand) { _, _ -> onSuccess() }
+        builder.setNegativeButton(android.R.string.cancel) { _, _ ->
+            toggleTracking(true)
+        }
         builder.show()
     }
-
 
 
     companion object {
@@ -334,5 +380,6 @@ class TrackingSection : androidx.fragment.app.Fragment(), OnSharedPreferenceChan
         const val KEY_STATUS = "status"
         private const val PERMISSIONS_REQUEST_LOCATION = 2
         private const val PERMISSIONS_REQUEST_BACKGROUND_LOCATION = 3
+        private const val KEY_USER_CONSENTED = "user_consented"
     }
 }

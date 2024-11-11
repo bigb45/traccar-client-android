@@ -47,8 +47,8 @@
   <string name="hidden_alert">The app has been hidden. To open it again please dial 8722227 (TRACCAR).</string>
   <string name="error_msg_invalid_url">Please enter a valid http:// or https:// URL</string>
   <string name="request_exception">This app needs to run in the background to track the vehicle accurately. To ensure uninterrupted tracking, please disable battery optimization for this app in the next screen.</string>
-  <string name="request_background">This app needs access to your location at all times to track the vehicle, even when you\'re not using the app. Please select \'Allow all the time\' in the next screen to ensure accurate vehicle tracking. We do not use your location for any other purposes</string>
-
+  <string name="request_background">This app needs access to your location at all times to track the vehicle, even when you\'re not using the app. Please select \'%1$s\' in the next screen to ensure accurate vehicle tracking. We do not use your location for any other purposes</string>
+  <string name="request_foreground" translatable="false">To enhance your experience and provide relevant features, we need access to your location while you’re using the app. This helps us show local results and track your activity effectively</string>
   <string name="request_background_option">Allow all the time</string>
   <string name="widget_description">Shows the service status</string>
   <string name="widget_label">Status widget</string>
@@ -60,4 +60,5 @@
     <string name="text_copied">Text copied to clipboard</string>
   <string name="request_background_improved">Our app needs access to your location even when you are not using the app to ensure we can accurately track your packages and provide real-time updates. Without background location access, the app cannot offer tracking features like notifications or updated locations for your deliveries. Your location will only be used to improve your experience and will not be shared with third parties.</string>
   <string name="request_background_title">Background Location Access Required</string>
+  <string name="i_understand">I Understand</string>
 </resources>
